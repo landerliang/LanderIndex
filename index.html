@@ -2,828 +2,589 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全球跨境电商服务 - 专业解决方案</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>地支灵签 · 十二地支随机生成器</title>
     <style>
-        :root {
-            --primary-blue: #1890FF;
-            --light-blue: rgba(24, 144, 255, 0.1);
-            --white: #ffffff;
-            --light-gray: #f8f9fa;
-            --medium-gray: #e9ecef;
-            --dark-gray: #495057;
-            --text-dark: #212529;
-            --shadow: rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-        
+
         body {
-            background-color: var(--white);
-            color: var(--text-dark);
-            line-height: 1.6;
+            background: linear-gradient(145deg, #f9f3e6 0%, #ffe6d5 100%);
+            font-family: 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
             min-height: 100vh;
+            padding: 20px 16px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        
+
+        /* 主容器 */
         .container {
-            max-width: 1200px;
+            max-width: 560px;
+            width: 100%;
             margin: 0 auto;
-            padding: 0 20px;
-            width: 100%;
-        }
-        
-        /* 顶部导航 */
-        header {
-            background-color: var(--white);
-            box-shadow: 0 2px 12px var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 0;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo i {
-            margin-right: 10px;
-            font-size: 1.9rem;
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-        }
-        
-        .nav-links li {
-            margin-left: 30px;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark-gray);
-            font-weight: 500;
-            font-size: 1.05rem;
-            transition: var(--transition);
-            padding: 5px 0;
-            position: relative;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary-blue);
-        }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary-blue);
-            transition: var(--transition);
-        }
-        
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        /* 主要内容区域 */
-        .main-content {
-            padding: 60px 0;
-        }
-        
-        .hero-section {
-            text-align: center;
-            margin-bottom: 70px;
-        }
-        
-        .hero-title {
-            font-size: 2.8rem;
-            color: var(--text-dark);
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-        
-        .hero-title span {
-            color: var(--primary-blue);
-        }
-        
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--dark-gray);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        /* 业务展示区 */
-        .services-section {
-            margin-bottom: 80px;
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2.2rem;
-            color: var(--text-dark);
-            margin-bottom: 50px;
-            position: relative;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: var(--primary-blue);
-            border-radius: 2px;
-        }
-        
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        
-        .service-card {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 30px 25px;
-            box-shadow: 0 6px 20px var(--shadow);
-            transition: var(--transition);
-            text-align: center;
-            border: 1px solid var(--medium-gray);
-        }
-        
-        .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 28px rgba(24, 144, 255, 0.15);
-            border-color: var(--primary-blue);
-        }
-        
-        .service-icon {
-            font-size: 2.8rem;
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-        }
-        
-        .service-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--text-dark);
-        }
-        
-        .service-desc {
-            color: var(--dark-gray);
-            font-size: 1rem;
-        }
-        
-        /* 右下角悬浮联系方式 */
-        .floating-contact {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-            transition: var(--transition);
-        }
-        
-        .contact-toggle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: var(--primary-blue);
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(24, 144, 255, 0.4);
-            transition: var(--transition);
-            border: none;
-            outline: none;
-        }
-        
-        .contact-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(24, 144, 255, 0.6);
-        }
-        
-        .contact-toggle i {
-            transition: transform 0.3s ease;
-        }
-        
-        .contact-panel {
-            position: absolute;
-            bottom: 75px;
-            right: 0;
-            width: 300px;
-            background-color: var(--white);
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            padding: 25px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: var(--transition);
-        }
-        
-        .contact-panel.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--medium-gray);
-        }
-        
-        .panel-title {
-            font-size: 1.4rem;
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-        
-        .close-panel {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--dark-gray);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .close-panel:hover {
-            color: var(--primary-blue);
-        }
-        
-        .panel-content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .contact-method {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px;
-            border-radius: 8px;
-            background-color: var(--light-gray);
-            transition: var(--transition);
-        }
-        
-        .contact-method:hover {
-            background-color: var(--light-blue);
-        }
-        
-        .contact-method i {
-            font-size: 1.5rem;
-            color: var(--primary-blue);
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--white);
-            border-radius: 50%;
-        }
-        
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .contact-label {
-            font-size: 0.9rem;
-            color: var(--dark-gray);
-            margin-bottom: 3px;
-        }
-        
-        .contact-value {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-        
-        .contact-note {
-            font-size: 0.85rem;
-            color: var(--dark-gray);
-            text-align: center;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed var(--medium-gray);
-        }
-        
-        /* 页脚 */
-        footer {
-            background-color: var(--text-dark);
-            color: var(--white);
-            padding: 40px 0;
-            text-align: center;
-        }
-        
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .copyright {
-            font-size: 1rem;
-            margin-bottom: 15px;
-            opacity: 0.8;
-        }
-        
-        .footer-links {
-            display: flex;
-            list-style: none;
-            margin-top: 10px;
-        }
-        
-        .footer-links li {
-            margin: 0 15px;
-        }
-        
-        .footer-links a {
-            color: var(--white);
-            text-decoration: none;
-            opacity: 0.8;
-            transition: var(--transition);
-            font-size: 0.95rem;
-        }
-        
-        .footer-links a:hover {
-            opacity: 1;
-            color: var(--primary-blue);
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 992px) {
-            .hero-title {
-                font-size: 2.4rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                padding: 15px 0;
-            }
-            
-            .logo {
-                margin-bottom: 15px;
-            }
-            
-            .nav-links {
-                margin-top: 10px;
-            }
-            
-            .nav-links li {
-                margin: 0 10px;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .service-card {
-                padding: 25px 20px;
-            }
-            
-            /* 移动端悬浮面板调整 */
-            .contact-panel {
-                width: 280px;
-                right: -10px;
-            }
-            
-            .floating-contact {
-                bottom: 20px;
-                right: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .hero-title {
-                font-size: 1.8rem;
-            }
-            
-            .section-title {
-                font-size: 1.7rem;
-            }
-            
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .nav-links li {
-                margin: 5px 10px;
-            }
-            
-            /* 移动端更小的悬浮面板 */
-            .contact-panel {
-                width: 260px;
-                right: -20px;
-            }
-        }
-        
-        /* 动画效果 */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .service-card {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        .service-card:nth-child(1) { animation-delay: 0.1s; }
-        .service-card:nth-child(2) { animation-delay: 0.2s; }
-        .service-card:nth-child(3) { animation-delay: 0.3s; }
-        .service-card:nth-child(4) { animation-delay: 0.4s; }
-        .service-card:nth-child(5) { animation-delay: 0.5s; }
-        .service-card:nth-child(6) { animation-delay: 0.6s; }
-        
-        /* 二维码占位样式 */
-        .qrcode-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
-            color: var(--dark-gray);
-        }
-        
-        .qrcode-placeholder i {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            color: var(--primary-blue);
-        }
-        
-        .qrcode-placeholder span {
-            font-size: 0.9rem;
-            text-align: center;
-            line-height: 1.4;
-        }
-		
-		        .qrcode-placeholder img {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-            border: 1px solid #eaeaea;
+            background: rgba(255, 248, 235, 0.85);
+            backdrop-filter: blur(2px);
+            border-radius: 64px 48px 64px 48px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             overflow: hidden;
+            padding: 28px 20px 32px;
+            transition: all 0.3s ease;
         }
-        
-        .qrcode-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+
+        /* 标题区 */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+            position: relative;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #b45f2b;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #c26e2e, #a1471a);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .header p {
+            font-size: 0.85rem;
+            color: #b87a4b;
+            margin-top: 8px;
+            background: #f7e9db;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+            font-weight: 500;
+        }
+
+        /* 抽签主卡片 */
+        .oracle-card {
+            background: #fffef7;
+            border-radius: 68px;
+            box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 245, 215, 0.9);
+            padding: 24px 20px 28px;
+            margin-bottom: 30px;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .dizhi-display {
+            font-size: 5.6rem;
+            font-weight: 800;
+            color: #bf5e2c;
+            text-shadow: 3px 3px 0 #ffe0b5;
+            letter-spacing: 8px;
+            background: #fff1e0;
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            border-radius: 80px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 -2px 0 #e7c7a8, 0 8px 14px -8px rgba(0,0,0,0.1);
+        }
+
+        .zodiac-info {
+            background: #fef3e8;
+            border-radius: 48px;
+            padding: 14px 12px;
+            margin: 12px 0;
+        }
+        .shengxiao {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #a34e26;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .shengxiao span:first-child {
+            background: #ffe0c4;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 1.1rem;
+        }
+        .shengxiao .emoji-big {
+            font-size: 2rem;
+        }
+        .shichen {
+            font-size: 0.85rem;
+            color: #c27e52;
+            background: #fff1e6;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 26px;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        /* 随机按钮 */
+        .random-btn {
+            background: linear-gradient(105deg, #d9822f, #b4541e);
+            border: none;
+            width: 80%;
+            margin: 12px auto 8px;
+            padding: 16px 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            box-shadow: 0 10px 18px -6px #b95f2b70;
+            transition: transform 0.15s, box-shadow 0.2s;
+            backdrop-filter: blur(2px);
+            font-family: inherit;
+        }
+        .random-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 5px 12px -4px #b45a27;
+        }
+        .random-btn .btn-icon {
+            font-size: 1.7rem;
+        }
+
+        /* 历史记录区域 */
+        .history-section {
+            margin-top: 20px;
+            background: #f8eedf;
+            border-radius: 48px;
+            padding: 16px 12px 12px;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0 8px 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .history-header h3 {
+            font-size: 1.1rem;
+            color: #aa5b2c;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .clear-history {
+            background: #e7cfb6;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #8b4c26;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .clear-history:active {
+            background: #dbbc99;
+            transform: scale(0.96);
+        }
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            min-height: 60px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .history-badge {
+            background: white;
+            border-radius: 48px;
+            padding: 6px 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #9c541e;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #f1dbbc;
+        }
+        .history-badge:active {
+            transform: scale(0.94);
+            background: #fff2e4;
+        }
+        .empty-history {
+            color: #c69264;
+            font-size: 0.8rem;
+            padding: 8px 0 6px 10px;
+            opacity: 0.7;
+        }
+
+        /* 十二地支参考网格 */
+        .ref-grid {
+            margin-top: 28px;
+            background: #fdf5ea;
+            border-radius: 48px;
+            padding: 20px 12px;
+        }
+        .ref-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #b46a38;
+            text-align: center;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+        .dizhi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .dizhi-item {
+            background: #fffaf2;
+            border-radius: 60px;
+            padding: 10px 6px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #7b4c2a;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #f6e3cf;
+        }
+        .dizhi-item .dz-char {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #bc632d;
+        }
+        .dizhi-item .dz-animal {
+            font-size: 0.7rem;
+            color: #b47c54;
+        }
+        .dizhi-item.active-highlight {
+            background: #ffdec2;
+            border: 1px solid #dd9f6c;
+            box-shadow: 0 4px 10px rgba(190, 95, 30, 0.2);
+            transform: scale(1.02);
+        }
+        .dizhi-item.active-highlight .dz-char {
+            color: #af4a13;
+            text-shadow: 0 0 2px #ffc392;
+        }
+
+        /* 页脚 */
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #cd9a6e;
+            margin-top: 24px;
+            opacity: 0.7;
+        }
+
+        /* 响应式 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 16px 28px;
+            }
+            .dizhi-display {
+                font-size: 4.2rem;
+                letter-spacing: 4px;
+            }
+            .random-btn {
+                width: 100%;
+                font-size: 1.3rem;
+                padding: 14px 0;
+            }
+            .dizhi-grid {
+                gap: 8px;
+            }
+            .dizhi-item {
+                padding: 6px 4px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 顶部导航 -->
-    <header>
-        <div class="container">
-            <nav class="nav-container">
-                <div class="logo">
-                    <i class="fas fa-globe-americas"></i>
-                    <span>Lander跨境</span>
-                </div>
-                <ul class="nav-links">
-                    <li><a href="#services">核心业务</a></li>
-                    <li><a href="#contact">联系我们</a></li>
-                    <li><a href="#about">关于我们</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <!-- 主要内容区域 -->
-    <main class="main-content">
-        <div class="container">
-            <!-- 英雄区域 -->
-            <section class="hero-section">
-                <h1 class="hero-title">全球跨境电商 <span>专业解决方案</span></h1>
-                <p class="hero-subtitle">提供美区二审、店铺运营、流量增长等一站式服务，助力您的业务全球化拓展</p>
-            </section>
-
-            <!-- 业务展示区 -->
-            <section class="services-section" id="services">
-                <h2 class="section-title">我们的核心业务</h2>
-                <div class="services-grid">
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <h3 class="service-title">美区二审服务</h3>
-                        <p class="service-desc">专业应对美区跨境企业店二审，提供资料准备、申诉信撰写、问题沟通等全流程服务，提高通过率。</p>
-                    </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <i class="fas fa-store"></i>
-                        </div>
-                        <h3 class="service-title">现店购买</h3>
-                        <p class="service-desc">提供优质现成店铺资源，安全合规的服务，快速启动您的电商业务。</p>
-                    </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <h3 class="service-title">代入驻服务</h3>
-                        <p class="service-desc">专业团队代办TikTok电商平台入驻，节省您的时间和精力。</p>
-                    </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3 class="service-title">精准涨粉服务</h3>
-                        <p class="service-desc">自然流TikTok精准粉丝增长，提升品牌影响力和转化率。</p>
-                    </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <h3 class="service-title">播放量提升</h3>
-                        <p class="service-desc">有效增加视频内容观看量，提升内容曝光度，助力热门内容打造。</p>
-                    </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <i class="fas fa-thumbs-up"></i>
-                        </div>
-                        <h3 class="service-title">点赞互动优化</h3>
-                        <p class="service-desc">提升内容点赞、评论、分享等互动数据，增强内容权重和算法推荐。</p>
-                    </div>
-                </div>
-                
-                <!-- 额外服务说明 -->
-                <div style="text-align: center; margin-top: 40px; padding: 20px; background-color: var(--light-blue); border-radius: 10px;">
-                    <h3 style="color: var(--primary-blue); margin-bottom: 10px;">全球自然流千粉万粉橱窗直播号</h3>
-                    <p style="color: var(--dark-gray); max-width: 800px; margin: 0 auto;">
-                        我们提供从零到一的TikTok直播号孵化服务，专注于自然流量增长，打造具有高转化潜力的千粉、万粉级橱窗直播账号，实现电商带货的快速增长。
-                    </p>
-                </div>
-            </section>
-
-            <!-- 页面中央的二维码区域 (原位置保留但内容简化) -->
-            <section class="contact-section" id="contact" style="text-align: center; margin-bottom: 60px; padding: 40px 20px; background-color: var(--light-gray); border-radius: 12px;">
-                <h2 style="font-size: 2rem; color: var(--text-dark); margin-bottom: 30px;">扫描二维码直接咨询</h2>
-                <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 40px; margin-bottom: 30px;">
-                    <div>
-                        <div style="font-weight: 600; margin-bottom: 10px; font-size: 1.2rem; color: var(--primary-blue);">微信咨询</div>
-                                            <div style="width: 160px; height: 160px; margin: 0 auto; background-color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                            <img src="qrcode/wechat.png" alt="微信二维码" style="width: 100%; height: 100%; object-fit: cover;"/>
-							
-                        </div>
-						<div>微信: gold_back_my_home</div>
-                    </div>
-                    
-                    <div>
-                        <div style="font-weight: 600; margin-bottom: 10px; font-size: 1.2rem; color: var(--primary-blue);">QQ咨询</div>
-                                               <div style="width: 160px; height: 160px; margin: 0 auto; background-color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                            <img src="qrcode/qq.png" alt="QQ二维码" style="width: 100%; height: 100%; object-fit: cover;"/>
-							
-                        </div>
-						<div>QQ: 3457792145</div>
-                    </div>
-                </div>
-                <p style="color: var(--dark-gray); max-width: 600px; margin: 0 auto;">扫描上方二维码添加客服，获取一对一专业咨询</p>
-            </section>
-        </div>
-    </main>
-
-
-        <div class="contact-panel" id="contactPanel">
-            <div class="panel-header">
-                <h3 class="panel-title">联系我们</h3>
-                <button class="close-panel" id="closePanel">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="panel-content">
-                <div class="contact-method">
-                    <i class="fab fa-weixin"></i>
-                    <div class="contact-info">
-                        <span class="contact-label">微信客服</span>
-                        <span class="contact-value">gold_back_my_home</span>
-                    </div>
-                </div>
-                
-                <div class="contact-method">
-                    <i class="fab fa-qq"></i>
-                    <div class="contact-info">
-                        <span class="contact-label">QQ客服</span>
-                        <span class="contact-value">3457792145</span>
-                    </div>
-                </div>
-                
-                <div class="contact-method">
-                    <i class="fas fa-clock"></i>
-                    <div class="contact-info">
-                        <span class="contact-label">服务时间</span>
-                        <span class="contact-value">9:00-23:00 (全年无休)</span>
-                    </div>
-                </div>
-                
-                <div class="contact-method">
-                    <i class="fas fa-headset"></i>
-                    <div class="contact-info">
-                        <span class="contact-label">响应承诺</span>
-                        <span class="contact-value">15分钟内回复</span>
-                    </div>
-                </div>
-            </div>
-            <p class="contact-note">扫码添加客服获取详细方案</p>
-        </div>
-        
+<div class="container">
+    <div class="header">
+        <h1>🌿 地支灵签 🌾</h1>
+        <p>随机召引 · 天干地支灵气</p>
     </div>
 
-    <!-- 页脚 -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <p class="copyright">© <span id="current-year">2023</span> Lander 全球跨境电商服务. 保留所有权利.</p>
-                <p style="margin-bottom: 15px; opacity: 0.8; max-width: 800px;">我们致力于为跨境电商卖家提供专业、合规、高效的一站式解决方案，助力中国品牌走向世界。</p>
-                <ul class="footer-links">
-                    <li><a href="#services">服务项目</a></li>
-                    <li><a href="#contact">联系我们</a></li>
-                    <li><a href="#">隐私政策</a></li>
-                    <li><a href="#">服务条款</a></li>
-                </ul>
+    <!-- 抽签结果卡片 -->
+    <div class="oracle-card">
+        <div class="dizhi-display" id="mainDizhi">子</div>
+        <div class="zodiac-info">
+            <div class="shengxiao" id="shengxiaoInfo">
+                <span>🐭 生肖 · 鼠</span>
+                <span class="emoji-big" id="animalEmoji">🐭</span>
             </div>
+            <div class="shichen" id="shichenInfo">子时 23:00 - 01:00</div>
         </div>
-    </footer>
+        <button class="random-btn" id="randomBtn">
+            <span class="btn-icon">🎲</span> 随机抽取
+        </button>
+    </div>
 
-    <script>
-        // 更新当前年份
-        document.addEventListener('DOMContentLoaded', function() {
-            // 更新年份
-            const yearElement = document.getElementById('current-year');
-            if (yearElement) {
-                const currentYear = new Date().getFullYear();
-                yearElement.textContent = currentYear;
+    <!-- 历史记录区域 -->
+    <div class="history-section">
+        <div class="history-header">
+            <h3>📜 最近随机记录</h3>
+            <button class="clear-history" id="clearHistoryBtn">清空记录</button>
+        </div>
+        <div class="history-list" id="historyList">
+            <div class="empty-history">暂无抽取记录，点击上方按钮 ✨</div>
+        </div>
+    </div>
+
+    <!-- 十二地支参考区 (高亮当前抽中的地支) -->
+    <div class="ref-grid">
+        <div class="ref-title">🌙 十二地支 · 灵兽守护 🌟</div>
+        <div class="dizhi-grid" id="dizhiGrid">
+            <!-- 动态生成12宫格，方便高亮和展示 -->
+        </div>
+    </div>
+    <div class="footer-note">
+        随机抽取 · 天地人和 | 点击历史条目可重现
+    </div>
+</div>
+
+<script>
+    // ----- 十二地支完整数据 -----
+    const DIZHI_LIST = [
+        { name: "子", animal: "鼠", emoji: "🐭", shichen: "子时 23:00 - 01:00" },
+        { name: "丑", animal: "牛", emoji: "🐮", shichen: "丑时 01:00 - 03:00" },
+        { name: "寅", animal: "虎", emoji: "🐯", shichen: "寅时 03:00 - 05:00" },
+        { name: "卯", animal: "兔", emoji: "🐰", shichen: "卯时 05:00 - 07:00" },
+        { name: "辰", animal: "龙", emoji: "🐲", shichen: "辰时 07:00 - 09:00" },
+        { name: "巳", animal: "蛇", emoji: "🐍", shichen: "巳时 09:00 - 11:00" },
+        { name: "午", animal: "马", emoji: "🐴", shichen: "午时 11:00 - 13:00" },
+        { name: "未", animal: "羊", emoji: "🐑", shichen: "未时 13:00 - 15:00" },
+        { name: "申", animal: "猴", emoji: "🐵", shichen: "申时 15:00 - 17:00" },
+        { name: "酉", animal: "鸡", emoji: "🐔", shichen: "酉时 17:00 - 19:00" },
+        { name: "戌", animal: "狗", emoji: "🐶", shichen: "戌时 19:00 - 21:00" },
+        { name: "亥", animal: "猪", emoji: "🐷", shichen: "亥时 21:00 - 23:00" }
+    ];
+
+    // 历史记录存储 (每个条目包含索引 index 以及展示需要的简写信息)
+    let historyRecords = [];      // 存储对象 { index, name, animal, emoji }
+    const MAX_HISTORY = 8;       // 最多保存8条记录
+
+    // DOM 元素
+    const mainDizhiEl = document.getElementById('mainDizhi');
+    const shengxiaoInfoEl = document.getElementById('shengxiaoInfo');
+    const animalEmojiEl = document.getElementById('animalEmoji');
+    const shichenInfoEl = document.getElementById('shichenInfo');
+    const randomBtn = document.getElementById('randomBtn');
+    const historyListEl = document.getElementById('historyList');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    const dizhiGridEl = document.getElementById('dizhiGrid');
+
+    // ---------- 辅助函数：更新主显示区 + 高亮参考网格 (根据索引) ----------
+    function updateMainDisplay(index) {
+        if (index < 0 || index >= DIZHI_LIST.length) return;
+        const item = DIZHI_LIST[index];
+        // 更新大字地支
+        mainDizhiEl.textContent = item.name;
+        // 更新生肖区域: 显示 “生肖·鼠” 加 emoji 大图标
+        shengxiaoInfoEl.innerHTML = `
+            <span>🐾 生肖 · ${item.animal}</span>
+            <span class="emoji-big">${item.emoji}</span>
+        `;
+        // 单独更新动物 emoji (保持一致性)
+        animalEmojiEl.textContent = item.emoji;
+        // 更新时辰
+        shichenInfoEl.textContent = item.shichen;
+
+        // 高亮下方十二地支网格的对应项
+        const allItems = document.querySelectorAll('.dizhi-item');
+        if (allItems.length === DIZHI_LIST.length) {
+            allItems.forEach((el, i) => {
+                if (i === index) {
+                    el.classList.add('active-highlight');
+                } else {
+                    el.classList.remove('active-highlight');
+                }
+            });
+        }
+    }
+
+    // 根据索引刷新展示 (不操作历史)
+    function refreshByIndex(index, addToHistory = false, avoidHistoryDuplicate = false) {
+        if (index === undefined || index === null) index = 0;
+        updateMainDisplay(index);
+
+        // 若需要添加到历史记录 (一般只有随机抽取按钮才会调用addToHistory=true)
+        if (addToHistory) {
+            const item = DIZHI_LIST[index];
+            // 避免极端情况：同一个随机结果连续添加时也正常记录，无过滤（忠实记录每次点击）
+            const record = {
+                index: index,
+                name: item.name,
+                animal: item.animal,
+                emoji: item.emoji
+            };
+            // 添加到历史数组最前（最新的在前面）
+            historyRecords.unshift(record);
+            // 超出最大长度则剔除尾部
+            if (historyRecords.length > MAX_HISTORY) {
+                historyRecords.pop();
             }
-            
-            // 平滑滚动导航
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
+            renderHistoryList();
+        }
+    }
+
+    // 随机获取一个合法索引 (0-11)
+    function getRandomDizhiIndex() {
+        return Math.floor(Math.random() * DIZHI_LIST.length);
+    }
+
+    // 随机抽取主逻辑 (并自动记录历史)
+    function randomPickAndRecord() {
+        const newIndex = getRandomDizhiIndex();
+        refreshByIndex(newIndex, true);   // 第二个参数 true 表示添加到历史
+        // 增加微动效（可选）
+        const card = document.querySelector('.oracle-card');
+        if (card) {
+            card.style.transform = 'scale(0.99)';
+            setTimeout(() => { if(card) card.style.transform = ''; }, 100);
+        }
+    }
+
+    // ---------- 历史记录渲染 (可点击回溯) ----------
+    function renderHistoryList() {
+        if (!historyListEl) return;
+        // 清空容器
+        historyListEl.innerHTML = '';
+        if (historyRecords.length === 0) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'empty-history';
+            emptyDiv.textContent = '暂无抽取记录，点击上方按钮 ✨';
+            historyListEl.appendChild(emptyDiv);
+            return;
+        }
+
+        // 倒序遍历展示（因为unshift后 0 是最新，我们希望最新仍然在左边或者正常排列，但使用flex wrap显示，从索引0开始最新）
+        // 直接正序显示即可 (historyRecords[0]是最新)
+        historyRecords.forEach((record, idx) => {
+            const badge = document.createElement('div');
+            badge.className = 'history-badge';
+            // 显示格式: 子·鼠🐭
+            badge.innerHTML = `${record.name} · ${record.animal} ${record.emoji}`;
+            // 设置自定义属性储存索引值
+            badge.setAttribute('data-index', record.index);
+            // 点击事件：重现该地支 (不记录历史，仅仅预览)
+            badge.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const targetIndex = parseInt(badge.getAttribute('data-index'), 10);
+                if (!isNaN(targetIndex) && targetIndex >= 0 && targetIndex < DIZHI_LIST.length) {
+                    // 重现选中历史，不加入历史记录
+                    refreshByIndex(targetIndex, false);
+                    // 加一点视觉反馈
+                    const card = document.querySelector('.oracle-card');
+                    if (card) {
+                        card.style.transform = 'scale(0.98)';
+                        setTimeout(() => { if(card) card.style.transform = ''; }, 120);
                     }
-                });
-            });
-            
-            // 服务卡片悬停效果增强
-            const serviceCards = document.querySelectorAll('.service-card');
-            serviceCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.borderColor = 'var(--primary-blue)';
-                });
-                card.addEventListener('mouseleave', function() {
-                    this.style.borderColor = 'var(--medium-gray)';
-                });
-            });
-            
-            // 检查二维码图片是否存在
-            setTimeout(() => {
-                const wechatImg = document.querySelector('img[alt="微信二维码"]');
-                const qqImg = document.querySelector('img[alt="QQ二维码"]');
-                
-                if (wechatImg && !wechatImg.complete) {
-                    console.log('提示：微信二维码图片可能未加载，请确保qrcode/wechat.jpg存在');
-                }
-                
-                if (qqImg && !qqImg.complete) {
-                    console.log('提示：QQ二维码图片可能未加载，请确保qrcode/qq.jpg存在');
-                }
-            }, 1000);
-            
-            // 悬浮联系方式面板交互
-            const contactToggle = document.getElementById('contactToggle');
-            const contactPanel = document.getElementById('contactPanel');
-            const closePanel = document.getElementById('closePanel');
-            
-            if (contactToggle && contactPanel) {
-                // 默认在PC端展开，移动端折叠
-                const isMobile = window.innerWidth <= 768;
-                if (!isMobile) {
-                    contactPanel.classList.add('active');
-                    contactToggle.innerHTML = '<i class="fas fa-times"></i>';
-                }
-                
-                // 切换面板显示/隐藏
-                contactToggle.addEventListener('click', function() {
-                    contactPanel.classList.toggle('active');
-                    
-                    // 更改图标
-                    if (contactPanel.classList.contains('active')) {
-                        this.innerHTML = '<i class="fas fa-times"></i>';
-                    } else {
-                        this.innerHTML = '<i class="fas fa-comment-dots"></i>';
-                    }
-                });
-                
-                // 关闭面板
-                if (closePanel) {
-                    closePanel.addEventListener('click', function() {
-                        contactPanel.classList.remove('active');
-                        contactToggle.innerHTML = '<i class="fas fa-comment-dots"></i>';
-                    });
-                }
-                
-                // 点击面板外部关闭（可选）
-                document.addEventListener('click', function(event) {
-                    const isClickInsidePanel = contactPanel.contains(event.target);
-                    const isClickOnToggle = contactToggle.contains(event.target);
-                    
-                    if (!isClickInsidePanel && !isClickOnToggle && contactPanel.classList.contains('active')) {
-                        contactPanel.classList.remove('active');
-                        contactToggle.innerHTML = '<i class="fas fa-comment-dots"></i>';
-                    }
-                });
-            }
-            
-            // 窗口大小变化时调整面板状态
-            window.addEventListener('resize', function() {
-                const isMobile = window.innerWidth <= 768;
-                if (!isMobile && !contactPanel.classList.contains('active')) {
-                    // PC端自动展开
-                    contactPanel.classList.add('active');
-                    contactToggle.innerHTML = '<i class="fas fa-times"></i>';
-                } else if (isMobile && contactPanel.classList.contains('active')) {
-                    // 切换到移动端时折叠
-                    contactPanel.classList.remove('active');
-                    contactToggle.innerHTML = '<i class="fas fa-comment-dots"></i>';
                 }
             });
+            historyListEl.appendChild(badge);
         });
-    </script>
+    }
+
+    // 清空历史记录
+    function clearHistory() {
+        historyRecords = [];
+        renderHistoryList();
+        // 清空后显示一条轻提示（可选）
+        // 不清除主显示区，只是历史清空
+    }
+
+    // ---------- 动态生成十二地支网格 (参考列表，不可点击随机，但是高亮被动跟随) ----------
+    function buildDizhiGrid() {
+        if (!dizhiGridEl) return;
+        dizhiGridEl.innerHTML = '';
+        DIZHI_LIST.forEach((item, idx) => {
+            const gridItem = document.createElement('div');
+            gridItem.className = 'dizhi-item';
+            gridItem.setAttribute('data-idx', idx);
+            gridItem.innerHTML = `
+                <div class="dz-char">${item.name}</div>
+                <div class="dz-animal">${item.animal}${item.emoji}</div>
+            `;
+            // 可选: 点击网格展示对应地支 (便于查阅，但注意这不是随机抽取，不记录历史)
+            // 这个交互增强体验: 允许用户点击任一地支直接查看详情，不干扰随机工具但增加便利
+            // 但需求核心随机生成，增加点击查看也是辅助功能，且不会自动加入随机记录，符合工具预期。
+            gridItem.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const clickIdx = parseInt(gridItem.getAttribute('data-idx'), 10);
+                if (!isNaN(clickIdx)) {
+                    // 手动点击参考网格只改变显示，不写入历史 (保持随机生成记录纯洁性)
+                    refreshByIndex(clickIdx, false);
+                    // 轻反馈
+                    const card = document.querySelector('.oracle-card');
+                    if (card) {
+                        card.style.transform = 'scale(0.99)';
+                        setTimeout(() => { if(card) card.style.transform = ''; }, 100);
+                    }
+                }
+            });
+            dizhiGridEl.appendChild(gridItem);
+        });
+    }
+
+    // 随机初始化 (首次加载随机一个地支，但不记录历史)
+    function initRandomWithoutHistory() {
+        const randomStartIndex = getRandomDizhiIndex();
+        refreshByIndex(randomStartIndex, false);
+        // 确保高亮同步 (refreshByIndex里面已经调用updateMainDisplay包含高亮)
+    }
+
+    // 绑定事件与清理外部监听
+    function bindEvents() {
+        if (randomBtn) {
+            // 移除原有监听避免重复绑定（但只有一次初始化）
+            randomBtn.removeEventListener('click', randomPickAndRecord);
+            randomBtn.addEventListener('click', randomPickAndRecord);
+        }
+        if (clearHistoryBtn) {
+            clearHistoryBtn.removeEventListener('click', clearHistory);
+            clearHistoryBtn.addEventListener('click', clearHistory);
+        }
+    }
+
+    // 额外样式增强: 防止多次快速点击造成闪烁
+    let pending = false;
+    if (randomBtn) {
+        randomBtn.addEventListener('click', (e) => {
+            if (pending) return;
+            pending = true;
+            setTimeout(() => { pending = false; }, 300);
+        });
+    }
+
+    // 优雅调整页面加载
+    function setup() {
+        buildDizhiGrid();        // 生成十二地支网格
+        bindEvents();            // 绑定按钮事件
+        initRandomWithoutHistory(); // 随机初始值（不记录历史）
+        renderHistoryList();     // 初始空历史展示
+    }
+
+    // 启动
+    setup();
+</script>
 </body>
 </html>
