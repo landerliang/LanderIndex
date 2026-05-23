@@ -1,590 +1,190 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>地支灵签 · 十二地支随机生成器</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>飞宫小奇门排盘</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: linear-gradient(145deg, #f9f3e6 0%, #ffe6d5 100%);
-            font-family: 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
-            min-height: 100vh;
-            padding: 20px 16px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 主容器 */
-        .container {
-            max-width: 560px;
-            width: 100%;
-            margin: 0 auto;
-            background: rgba(255, 248, 235, 0.85);
-            backdrop-filter: blur(2px);
-            border-radius: 64px 48px 64px 48px;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            overflow: hidden;
-            padding: 28px 20px 32px;
-            transition: all 0.3s ease;
-        }
-
-        /* 标题区 */
-        .header {
-            text-align: center;
-            margin-bottom: 28px;
-            position: relative;
-        }
-        .header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #b45f2b;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #c26e2e, #a1471a);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .header p {
-            font-size: 0.85rem;
-            color: #b87a4b;
-            margin-top: 8px;
-            background: #f7e9db;
-            display: inline-block;
-            padding: 4px 16px;
-            border-radius: 40px;
-            backdrop-filter: blur(2px);
-            font-weight: 500;
-        }
-
-        /* 抽签主卡片 */
-        .oracle-card {
-            background: #fffef7;
-            border-radius: 68px;
-            box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 245, 215, 0.9);
-            padding: 24px 20px 28px;
-            margin-bottom: 30px;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .dizhi-display {
-            font-size: 5.6rem;
-            font-weight: 800;
-            color: #bf5e2c;
-            text-shadow: 3px 3px 0 #ffe0b5;
-            letter-spacing: 8px;
-            background: #fff1e0;
-            display: inline-block;
-            padding: 0.2em 0.6em;
-            border-radius: 80px;
-            margin-bottom: 20px;
-            box-shadow: inset 0 -2px 0 #e7c7a8, 0 8px 14px -8px rgba(0,0,0,0.1);
-        }
-
-        .zodiac-info {
-            background: #fef3e8;
-            border-radius: 48px;
-            padding: 14px 12px;
-            margin: 12px 0;
-        }
-        .shengxiao {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #a34e26;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .shengxiao span:first-child {
-            background: #ffe0c4;
-            padding: 4px 16px;
-            border-radius: 40px;
-            font-size: 1.1rem;
-        }
-        .shengxiao .emoji-big {
-            font-size: 2rem;
-        }
-        .shichen {
-            font-size: 0.85rem;
-            color: #c27e52;
-            background: #fff1e6;
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 26px;
-            margin-top: 12px;
-            font-weight: 500;
-        }
-
-        /* 随机按钮 */
-        .random-btn {
-            background: linear-gradient(105deg, #d9822f, #b4541e);
-            border: none;
-            width: 80%;
-            margin: 12px auto 8px;
-            padding: 16px 0;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-            border-radius: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
-            box-shadow: 0 10px 18px -6px #b95f2b70;
-            transition: transform 0.15s, box-shadow 0.2s;
-            backdrop-filter: blur(2px);
-            font-family: inherit;
-        }
-        .random-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 5px 12px -4px #b45a27;
-        }
-        .random-btn .btn-icon {
-            font-size: 1.7rem;
-        }
-
-        /* 历史记录区域 */
-        .history-section {
-            margin-top: 20px;
-            background: #f8eedf;
-            border-radius: 48px;
-            padding: 16px 12px 12px;
-        }
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding: 0 8px 12px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .history-header h3 {
-            font-size: 1.1rem;
-            color: #aa5b2c;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .clear-history {
-            background: #e7cfb6;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #8b4c26;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .clear-history:active {
-            background: #dbbc99;
-            transform: scale(0.96);
-        }
-        .history-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            min-height: 60px;
-            justify-content: flex-start;
-            align-items: center;
-        }
-        .history-badge {
-            background: white;
-            border-radius: 48px;
-            padding: 6px 18px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #9c541e;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid #f1dbbc;
-        }
-        .history-badge:active {
-            transform: scale(0.94);
-            background: #fff2e4;
-        }
-        .empty-history {
-            color: #c69264;
-            font-size: 0.8rem;
-            padding: 8px 0 6px 10px;
-            opacity: 0.7;
-        }
-
-        /* 十二地支参考网格 */
-        .ref-grid {
-            margin-top: 28px;
-            background: #fdf5ea;
-            border-radius: 48px;
-            padding: 20px 12px;
-        }
-        .ref-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #b46a38;
-            text-align: center;
-            margin-bottom: 16px;
-            letter-spacing: 1px;
-        }
-        .dizhi-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-        .dizhi-item {
-            background: #fffaf2;
-            border-radius: 60px;
-            padding: 10px 6px;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #7b4c2a;
-            transition: all 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            border: 1px solid #f6e3cf;
-        }
-        .dizhi-item .dz-char {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: #bc632d;
-        }
-        .dizhi-item .dz-animal {
-            font-size: 0.7rem;
-            color: #b47c54;
-        }
-        .dizhi-item.active-highlight {
-            background: #ffdec2;
-            border: 1px solid #dd9f6c;
-            box-shadow: 0 4px 10px rgba(190, 95, 30, 0.2);
-            transform: scale(1.02);
-        }
-        .dizhi-item.active-highlight .dz-char {
-            color: #af4a13;
-            text-shadow: 0 0 2px #ffc392;
-        }
-
-        /* 页脚 */
-        .footer-note {
-            text-align: center;
-            font-size: 0.7rem;
-            color: #cd9a6e;
-            margin-top: 24px;
-            opacity: 0.7;
-        }
-
-        /* 响应式 */
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px 16px 28px;
-            }
-            .dizhi-display {
-                font-size: 4.2rem;
-                letter-spacing: 4px;
-            }
-            .random-btn {
-                width: 100%;
-                font-size: 1.3rem;
-                padding: 14px 0;
-            }
-            .dizhi-grid {
-                gap: 8px;
-            }
-            .dizhi-item {
-                padding: 6px 4px;
-            }
-        }
+      :root{--primary:#d8b83f;--primary-soft:#fff6d5;--white:#ffffff;--text:#6b5300;--border:#e5d77a}
+      html,body,#app{height:100%;margin:0;font-family:system-ui,Segoe UI,Roboto,'PingFang SC','Hiragino Sans GB',"Microsoft YaHei";background:linear-gradient(180deg,#fffdf2,#ffffff)}
+      .container{max-width:900px;margin:18px auto;padding:18px}
+      .card{background:var(--white);border-radius:10px;box-shadow:0 6px 18px rgba(216,184,63,0.18);padding:16px;margin-bottom:14px}
+      h1{margin:0 0 10px 0;color:var(--primary)}
+      .row{display:flex;gap:12px;align-items:center}
+      .branches{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+      .slot{min-width:60px;padding:10px 8px;border-radius:8px;background:var(--primary-soft);color:var(--text);text-align:center;cursor:pointer;user-select:none}
+      .controls{display:flex;gap:8px;flex-wrap:wrap}
+      button{background:var(--primary);color:var(--white);border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
+      .btn-ghost{background:transparent;color:var(--primary);border:1px solid rgba(216,184,63,0.35)}
+      select{padding:8px;border-radius:6px;border:1px solid rgba(216,184,63,0.35)}
+      .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+      .cell{background:var(--primary-soft);padding:12px;border-radius:8px;text-align:center;border:1px solid rgba(216,184,63,0.18);min-height:140px;display:flex;flex-direction:column;justify-content:flex-start;position:relative}
+      .cell-title{font-weight:700;margin-bottom:6px}
+      .branch-list{font-size:13px;color:#5a4617;text-align:left;white-space:pre-line;line-height:1.45;word-break:break-word;}
+      .gate-box{position:absolute;left:12px;bottom:12px;font-size:18px;color:#5a4617;}
+      .stem-box{position:absolute;right:12px;bottom:12px;font-size:14px;font-weight:700;color:#6b5300;}
+      .mid-stem{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:16px;font-weight:800;color:#6b5300;}
+      .small{font-size:13px;color:#6b5300}
+      label.small{display:flex;align-items:center;gap:6px}
+      @media (max-width:420px){.slot{min-width:48px;padding:8px}}
     </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="header">
-        <h1>🌿 地支灵签 🌾</h1>
-        <p>随机召引 · 天干地支灵气</p>
-    </div>
-
-    <!-- 抽签结果卡片 -->
-    <div class="oracle-card">
-        <div class="dizhi-display" id="mainDizhi">子</div>
-        <div class="zodiac-info">
-            <div class="shengxiao" id="shengxiaoInfo">
-                <span>🐭 生肖 · 鼠</span>
-                <span class="emoji-big" id="animalEmoji">🐭</span>
-            </div>
-            <div class="shichen" id="shichenInfo">子时 23:00 - 01:00</div>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <div class="card">
+          <h1>小奇门时局生成器</h1>
         </div>
-        <button class="random-btn" id="randomBtn">
-            <span class="btn-icon">🎲</span> 随机抽取
-        </button>
-    </div>
 
-    <!-- 历史记录区域 -->
-    <div class="history-section">
-        <div class="history-header">
-            <h3>📜 最近随机记录</h3>
-            <button class="clear-history" id="clearHistoryBtn">清空记录</button>
+        <div class="card">
+          <div class="small">随机地支排盘</div>
+          <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button id="randomize">随机生成地支</button>
+            <label class="small">手动选择地支：
+              <select id="branch-select"><option value="">请选择</option></select>
+            </label>
+            <div class="small" id="selected-branch">当前地支：<strong>未生成</strong></div>
+          </div>
         </div>
-        <div class="history-list" id="historyList">
-            <div class="empty-history">暂无抽取记录，点击上方按钮 ✨</div>
+
+        <div class="card">
+          <div class="small">小奇门排盘结果（固定飞宫小奇门九宫格）</div>
+          <div class="grid" id="result-grid"></div>
         </div>
+      </div>
     </div>
 
-    <!-- 十二地支参考区 (高亮当前抽中的地支) -->
-    <div class="ref-grid">
-        <div class="ref-title">🌙 十二地支 · 灵兽守护 🌟</div>
-        <div class="dizhi-grid" id="dizhiGrid">
-            <!-- 动态生成12宫格，方便高亮和展示 -->
-        </div>
-    </div>
-    <div class="footer-note">
-        随机抽取 · 天地人和 | 点击历史条目可重现
-    </div>
-</div>
+    <script>
+      const TIANGAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+      const DIZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+      const PALACE_NAMES = ['坎一宫','坤二宫','震三宫','巽四宫','中五宫','乾六宫','兑七宫','艮八宫','离九宫'];
+      const PALACE_BRANCHES = ['子','未/申','卯','辰/巳','','戌/亥','酉','丑/寅','午'];
+      const PALACE_BRANCH_LISTS = PALACE_BRANCHES.map(v => v ? v.split('/') : []);
+      const DISPLAY_ORDER = [3,8,1,2,4,6,7,0,5];
+      const BRANCH_TO_PALACE = { '子':0, '丑':7, '寅':7, '卯':2, '辰':3, '巳':3, '午':8, '未':1, '申':1, '酉':6, '戌':5, '亥':5 };
+      const RING_ORDER = [3,8,1,6,5,0,7,2];
+      const REVERSE_BRANCH_PALACES = new Set([3,7]);
+      const PALACE_TO_NUMERIC = [1,2,3,4,5,6,7,8,9];
+      const NUMERIC_PALACE_MAP = {1:0,2:1,3:2,4:3,5:4,6:5,7:6,8:7,9:8};
+      const GATE_ORDER = ['休','生','伤','杜','景','死','惊','开'];
+      const BRANCH_ORDER = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+      const YUAN_SHEN_ORDER = ['青龙','明堂','天刑','朱雀','金匮','天德','白虎','玉堂','天牢','玄武','司命','勾陈'];
+      const TIAN_XING_ORDER = ['建','除','满','平','定','执','破','危','成','收','开','闭'];
+      const STAR_START = {
+        '子':'申','午':'申',
+        '卯':'寅','酉':'寅',
+        '寅':'子','申':'子',
+        '巳':'午','亥':'午',
+        '丑':'戌','未':'戌',
+        '辰':'辰','戌':'辰'
+      };
+      const FLY_SEQUENCE = [0,1,2,3,4,5,6,7,8,4];
 
-<script>
-    // ----- 十二地支完整数据 -----
-    const DIZHI_LIST = [
-        { name: "子", animal: "鼠", emoji: "🐭", shichen: "子时 23:00 - 01:00" },
-        { name: "丑", animal: "牛", emoji: "🐮", shichen: "丑时 01:00 - 03:00" },
-        { name: "寅", animal: "虎", emoji: "🐯", shichen: "寅时 03:00 - 05:00" },
-        { name: "卯", animal: "兔", emoji: "🐰", shichen: "卯时 05:00 - 07:00" },
-        { name: "辰", animal: "龙", emoji: "🐲", shichen: "辰时 07:00 - 09:00" },
-        { name: "巳", animal: "蛇", emoji: "🐍", shichen: "巳时 09:00 - 11:00" },
-        { name: "午", animal: "马", emoji: "🐴", shichen: "午时 11:00 - 13:00" },
-        { name: "未", animal: "羊", emoji: "🐑", shichen: "未时 13:00 - 15:00" },
-        { name: "申", animal: "猴", emoji: "🐵", shichen: "申时 15:00 - 17:00" },
-        { name: "酉", animal: "鸡", emoji: "🐔", shichen: "酉时 17:00 - 19:00" },
-        { name: "戌", animal: "狗", emoji: "🐶", shichen: "戌时 19:00 - 21:00" },
-        { name: "亥", animal: "猪", emoji: "🐷", shichen: "亥时 21:00 - 23:00" }
-    ];
+      ;(function(){
+        const randomBtn = document.getElementById('randomize');
+        const branchSelect = document.getElementById('branch-select');
+        const selectedBranchLabel = document.getElementById('selected-branch');
+        const grid = document.getElementById('result-grid');
 
-    // 历史记录存储 (每个条目包含索引 index 以及展示需要的简写信息)
-    let historyRecords = [];      // 存储对象 { index, name, animal, emoji }
-    const MAX_HISTORY = 8;       // 最多保存8条记录
+        DIZHI.forEach((branch)=>{
+          const option = document.createElement('option');
+          option.value = branch;
+          option.textContent = branch;
+          branchSelect.appendChild(option);
+        });
 
-    // DOM 元素
-    const mainDizhiEl = document.getElementById('mainDizhi');
-    const shengxiaoInfoEl = document.getElementById('shengxiaoInfo');
-    const animalEmojiEl = document.getElementById('animalEmoji');
-    const shichenInfoEl = document.getElementById('shichenInfo');
-    const randomBtn = document.getElementById('randomBtn');
-    const historyListEl = document.getElementById('historyList');
-    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-    const dizhiGridEl = document.getElementById('dizhiGrid');
+        function renderGrid(branch){
+          grid.innerHTML = '';
+          const startPalace = BRANCH_TO_PALACE[branch];
 
-    // ---------- 辅助函数：更新主显示区 + 高亮参考网格 (根据索引) ----------
-    function updateMainDisplay(index) {
-        if (index < 0 || index >= DIZHI_LIST.length) return;
-        const item = DIZHI_LIST[index];
-        // 更新大字地支
-        mainDizhiEl.textContent = item.name;
-        // 更新生肖区域: 显示 “生肖·鼠” 加 emoji 大图标
-        shengxiaoInfoEl.innerHTML = `
-            <span>🐾 生肖 · ${item.animal}</span>
-            <span class="emoji-big">${item.emoji}</span>
-        `;
-        // 单独更新动物 emoji (保持一致性)
-        animalEmojiEl.textContent = item.emoji;
-        // 更新时辰
-        shichenInfoEl.textContent = item.shichen;
+          const palaceTG = new Array(9).fill('');
+          const startIndex = FLY_SEQUENCE.indexOf(startPalace);
+          for(let i=0;i<10;i++){
+            const idx = FLY_SEQUENCE[(startIndex + i) % FLY_SEQUENCE.length];
+            palaceTG[idx] = palaceTG[idx] ? palaceTG[idx] + '/' + TIANGAN[i] : TIANGAN[i];
+          }
 
-        // 高亮下方十二地支网格的对应项
-        const allItems = document.querySelectorAll('.dizhi-item');
-        if (allItems.length === DIZHI_LIST.length) {
-            allItems.forEach((el, i) => {
-                if (i === index) {
-                    el.classList.add('active-highlight');
-                } else {
-                    el.classList.remove('active-highlight');
-                }
-            });
-        }
-    }
+          const palaceGates = new Array(9).fill('-');
+          let nextNumeric = PALACE_TO_NUMERIC[startPalace] + 1;
+          if(nextNumeric === 5) nextNumeric = 6;
+          if(nextNumeric === 10) nextNumeric = 1;
+          if(nextNumeric === 5) nextNumeric = 6;
+          const startGatePalace = NUMERIC_PALACE_MAP[nextNumeric];
+          const startGateIdx = RING_ORDER.indexOf(startGatePalace);
+          for(let k=0;k<8;k++){
+            const idx = RING_ORDER[(startGateIdx + k) % RING_ORDER.length];
+            palaceGates[idx] = GATE_ORDER[k];
+          }
 
-    // 根据索引刷新展示 (不操作历史)
-    function refreshByIndex(index, addToHistory = false, avoidHistoryDuplicate = false) {
-        if (index === undefined || index === null) index = 0;
-        updateMainDisplay(index);
+          const branchShen = {};
+          const branchStar = {};
+          const startShenIdx = BRANCH_ORDER.indexOf(branch);
+          for(let i=0;i<12;i++){
+            const b = BRANCH_ORDER[(startShenIdx + i) % 12];
+            branchShen[b] = YUAN_SHEN_ORDER[i];
+          }
+          const startStarIdx = BRANCH_ORDER.indexOf(STAR_START[branch]);
+          for(let i=0;i<12;i++){
+            const b = BRANCH_ORDER[(startStarIdx + i) % 12];
+            branchStar[b] = TIAN_XING_ORDER[i];
+          }
 
-        // 若需要添加到历史记录 (一般只有随机抽取按钮才会调用addToHistory=true)
-        if (addToHistory) {
-            const item = DIZHI_LIST[index];
-            // 避免极端情况：同一个随机结果连续添加时也正常记录，无过滤（忠实记录每次点击）
-            const record = {
-                index: index,
-                name: item.name,
-                animal: item.animal,
-                emoji: item.emoji
-            };
-            // 添加到历史数组最前（最新的在前面）
-            historyRecords.unshift(record);
-            // 超出最大长度则剔除尾部
-            if (historyRecords.length > MAX_HISTORY) {
-                historyRecords.pop();
+          const palaceYuan = new Array(9).fill('');
+          const palaceStar = new Array(9).fill('');
+          const palaceBranchDetails = new Array(9).fill(null).map(()=>[]);
+          BRANCH_ORDER.forEach((b)=>{
+            const p = BRANCH_TO_PALACE[b];
+            const shen = branchShen[b];
+            const star = branchStar[b];
+            palaceYuan[p] = palaceYuan[p] ? palaceYuan[p] + ' ' + shen : shen;
+            palaceStar[p] = palaceStar[p] ? palaceStar[p] + ' ' + star : star;
+            palaceBranchDetails[p].push(`${b}: ${shen || '-'} ${star || '-'}`);
+          });
+
+          DISPLAY_ORDER.forEach((idx)=>{
+            const name = PALACE_NAMES[idx];
+            const c = document.createElement('div'); c.className='cell';
+            const title = document.createElement('div'); title.className='cell-title'; title.textContent = name;
+            c.appendChild(title);
+
+            if(idx === 4) {
+              const centerStem = document.createElement('div'); centerStem.className='mid-stem';
+              centerStem.textContent = palaceTG[idx] ? palaceTG[idx].replace('/','') : '-';
+              c.appendChild(centerStem);
+            } else {
+              const branchLines = document.createElement('div'); branchLines.className='branch-list';
+              const branchDetails = palaceBranchDetails[idx].slice();
+              if(REVERSE_BRANCH_PALACES.has(idx)) branchDetails.reverse();
+              branchLines.textContent = branchDetails.length ? branchDetails.join('\n') : '';
+              c.appendChild(branchLines);
+
+              const gateLine = document.createElement('div'); gateLine.className='gate-box'; gateLine.textContent = palaceGates[idx] || '';
+              const stemLine = document.createElement('div'); stemLine.className='stem-box'; stemLine.textContent = palaceTG[idx] || '-';
+              c.appendChild(gateLine);
+              c.appendChild(stemLine);
             }
-            renderHistoryList();
-        }
-    }
 
-    // 随机获取一个合法索引 (0-11)
-    function getRandomDizhiIndex() {
-        return Math.floor(Math.random() * DIZHI_LIST.length);
-    }
-
-    // 随机抽取主逻辑 (并自动记录历史)
-    function randomPickAndRecord() {
-        const newIndex = getRandomDizhiIndex();
-        refreshByIndex(newIndex, true);   // 第二个参数 true 表示添加到历史
-        // 增加微动效（可选）
-        const card = document.querySelector('.oracle-card');
-        if (card) {
-            card.style.transform = 'scale(0.99)';
-            setTimeout(() => { if(card) card.style.transform = ''; }, 100);
-        }
-    }
-
-    // ---------- 历史记录渲染 (可点击回溯) ----------
-    function renderHistoryList() {
-        if (!historyListEl) return;
-        // 清空容器
-        historyListEl.innerHTML = '';
-        if (historyRecords.length === 0) {
-            const emptyDiv = document.createElement('div');
-            emptyDiv.className = 'empty-history';
-            emptyDiv.textContent = '暂无抽取记录，点击上方按钮 ✨';
-            historyListEl.appendChild(emptyDiv);
-            return;
+            grid.appendChild(c);
+          });
         }
 
-        // 倒序遍历展示（因为unshift后 0 是最新，我们希望最新仍然在左边或者正常排列，但使用flex wrap显示，从索引0开始最新）
-        // 直接正序显示即可 (historyRecords[0]是最新)
-        historyRecords.forEach((record, idx) => {
-            const badge = document.createElement('div');
-            badge.className = 'history-badge';
-            // 显示格式: 子·鼠🐭
-            badge.innerHTML = `${record.name} · ${record.animal} ${record.emoji}`;
-            // 设置自定义属性储存索引值
-            badge.setAttribute('data-index', record.index);
-            // 点击事件：重现该地支 (不记录历史，仅仅预览)
-            badge.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const targetIndex = parseInt(badge.getAttribute('data-index'), 10);
-                if (!isNaN(targetIndex) && targetIndex >= 0 && targetIndex < DIZHI_LIST.length) {
-                    // 重现选中历史，不加入历史记录
-                    refreshByIndex(targetIndex, false);
-                    // 加一点视觉反馈
-                    const card = document.querySelector('.oracle-card');
-                    if (card) {
-                        card.style.transform = 'scale(0.98)';
-                        setTimeout(() => { if(card) card.style.transform = ''; }, 120);
-                    }
-                }
-            });
-            historyListEl.appendChild(badge);
+        branchSelect.addEventListener('change', ()=>{
+          const branch = branchSelect.value;
+          if(branch) {
+            selectedBranchLabel.innerHTML = `当前地支：<strong>${branch}</strong>`;
+            renderGrid(branch);
+          }
         });
-    }
 
-    // 清空历史记录
-    function clearHistory() {
-        historyRecords = [];
-        renderHistoryList();
-        // 清空后显示一条轻提示（可选）
-        // 不清除主显示区，只是历史清空
-    }
-
-    // ---------- 动态生成十二地支网格 (参考列表，不可点击随机，但是高亮被动跟随) ----------
-    function buildDizhiGrid() {
-        if (!dizhiGridEl) return;
-        dizhiGridEl.innerHTML = '';
-        DIZHI_LIST.forEach((item, idx) => {
-            const gridItem = document.createElement('div');
-            gridItem.className = 'dizhi-item';
-            gridItem.setAttribute('data-idx', idx);
-            gridItem.innerHTML = `
-                <div class="dz-char">${item.name}</div>
-                <div class="dz-animal">${item.animal}${item.emoji}</div>
-            `;
-            // 可选: 点击网格展示对应地支 (便于查阅，但注意这不是随机抽取，不记录历史)
-            // 这个交互增强体验: 允许用户点击任一地支直接查看详情，不干扰随机工具但增加便利
-            // 但需求核心随机生成，增加点击查看也是辅助功能，且不会自动加入随机记录，符合工具预期。
-            gridItem.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const clickIdx = parseInt(gridItem.getAttribute('data-idx'), 10);
-                if (!isNaN(clickIdx)) {
-                    // 手动点击参考网格只改变显示，不写入历史 (保持随机生成记录纯洁性)
-                    refreshByIndex(clickIdx, false);
-                    // 轻反馈
-                    const card = document.querySelector('.oracle-card');
-                    if (card) {
-                        card.style.transform = 'scale(0.99)';
-                        setTimeout(() => { if(card) card.style.transform = ''; }, 100);
-                    }
-                }
-            });
-            dizhiGridEl.appendChild(gridItem);
-        });
-    }
-
-    // 随机初始化 (首次加载随机一个地支，但不记录历史)
-    function initRandomWithoutHistory() {
-        const randomStartIndex = getRandomDizhiIndex();
-        refreshByIndex(randomStartIndex, false);
-        // 确保高亮同步 (refreshByIndex里面已经调用updateMainDisplay包含高亮)
-    }
-
-    // 绑定事件与清理外部监听
-    function bindEvents() {
-        if (randomBtn) {
-            // 移除原有监听避免重复绑定（但只有一次初始化）
-            randomBtn.removeEventListener('click', randomPickAndRecord);
-            randomBtn.addEventListener('click', randomPickAndRecord);
+        function randomizeBranch(){
+          const branch = DIZHI[Math.floor(Math.random() * DIZHI.length)];
+          branchSelect.value = branch;
+          selectedBranchLabel.innerHTML = `当前地支：<strong>${branch}</strong>`;
+          renderGrid(branch);
         }
-        if (clearHistoryBtn) {
-            clearHistoryBtn.removeEventListener('click', clearHistory);
-            clearHistoryBtn.addEventListener('click', clearHistory);
-        }
-    }
 
-    // 额外样式增强: 防止多次快速点击造成闪烁
-    let pending = false;
-    if (randomBtn) {
-        randomBtn.addEventListener('click', (e) => {
-            if (pending) return;
-            pending = true;
-            setTimeout(() => { pending = false; }, 300);
-        });
-    }
-
-    // 优雅调整页面加载
-    function setup() {
-        buildDizhiGrid();        // 生成十二地支网格
-        bindEvents();            // 绑定按钮事件
-        initRandomWithoutHistory(); // 随机初始值（不记录历史）
-        renderHistoryList();     // 初始空历史展示
-    }
-
-    // 启动
-    setup();
-</script>
-</body>
+        randomBtn.addEventListener('click',randomizeBranch);
+      })();
+    </script>
+  </body>
 </html>
