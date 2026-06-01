@@ -48,8 +48,24 @@
         </div>
 
         <div class="card">
-          <div class="small">小奇门九宫格</div>
+          <div class="small">当前日期时间与四柱</div>
+          <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <div class="small" id="current-datetime">当前时间：<strong>加载中...</strong></div>
+            <div class="small" id="current-pillars">四柱：<strong>加载中...</strong></div>
+            <button id="refresh-time" class="btn-ghost">刷新日期时间</button>
+          </div>
+        </div>
+
+
+
+        <div class="card">
+          <div class="small">小奇门排盘结果（固定飞宫小奇门九宫格）</div>
           <div class="grid" id="result-grid"></div>
+        </div>
+
+                <div class="card">
+          <div class="small">排盘记录</div>
+          <div id="history-list" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;min-height:60px;color:#5a4617;"></div>
         </div>
       </div>
     </div>
@@ -79,12 +95,168 @@
         '辰':'辰','戌':'辰'
       };
       const FLY_SEQUENCE = [0,1,2,3,4,5,6,7,8,4];
+      const DATETIME_API = 'https://worldtimeapi.org/api/timezone/Asia/Shanghai';
+      const MONTH_BRANCH_ORDER = ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'];
+
+      function pad(num){ return num.toString().padStart(2,'0'); }
+      function toBeijingDate(date){
+        const formatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'Asia/Shanghai',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        });
+        const parts = formatter.formatToParts(date);
+        const values = {};
+        parts.forEach(p => { if(p.type !== 'literal') values[p.type] = p.value; });
+        return new Date(Date.UTC(values.year, values.month - 1, values.day, values.hour, values.minute, values.second));
+      }
+      function cycleIndex(value, offset, modulus){ return ((value - offset) % modulus + modulus) % modulus; }
+      function getYearPillar(date){
+        const year = date.getUTCFullYear();
+        const month = date.getUTCMonth() + 1;
+        const day = date.getUTCDate();
+        const adjustedYear = (month < 2 || (month === 2 && day < 4)) ? year - 1 : year;
+        const stem = cycleIndex(adjustedYear, 4, 10);
+        const branch = cycleIndex(adjustedYear, 4, 12);
+        return { pillar: TIANGAN[stem] + DIZHI[branch], stemIndex: stem };
+      }
+      function getMonthBranch(date){
+        const month = date.getUTCMonth() + 1;
+        const day = date.getUTCDate();
+        if((month === 1 && day <= 5) || (month === 12 && day >= 7)) return '子';
+        if((month === 1 && day >= 6) || (month === 2 && day <= 3)) return '丑';
+        if((month === 2 && day >= 4) || (month === 3 && day <= 5)) return '寅';
+        if((month === 3 && day >= 6) || (month === 4 && day <= 4)) return '卯';
+        if((month === 4 && day >= 5) || (month === 5 && day <= 5)) return '辰';
+        if((month === 5 && day >= 6) || (month === 6 && day <= 5)) return '巳';
+        if((month === 6 && day >= 6) || (month === 7 && day <= 7)) return '午';
+        if((month === 7 && day >= 8) || (month === 8 && day <= 7)) return '未';
+        if((month === 8 && day >= 8) || (month === 9 && day <= 7)) return '申';
+        if((month === 9 && day >= 8) || (month === 10 && day <= 7)) return '酉';
+        if((month === 10 && day >= 8) || (month === 11 && day <= 6)) return '戌';
+        return '亥';
+      }
+      function getMonthPillar(date, yearStemIndex){
+        const branch = getMonthBranch(date);
+        const branchIndex = MONTH_BRANCH_ORDER.indexOf(branch);
+        const stemIndex = (yearStemIndex * 2 + branchIndex + 2) % 10;
+        return TIANGAN[stemIndex] + branch;
+      }
+      function getDayPillar(date){
+        const beijing = toBeijingDate(date);
+        const current = Date.UTC(beijing.getUTCFullYear(), beijing.getUTCMonth(), beijing.getUTCDate());
+        const ref = Date.UTC(1984, 1, 2); // 1984-02-02 北京时间基准日
+        const days = Math.floor((current - ref) / 86400000);
+        const index = cycleIndex(days + 1, 0, 60);
+        return { pillar: TIANGAN[index % 10] + DIZHI[index % 12], stemIndex: index % 10 };
+      }
+      function getHourPillar(date, dayStemIndex){
+        const hour = date.getUTCHours();
+        const branchIndex = Math.floor((hour + 1) / 2) % 12;
+        const stemIndex = (dayStemIndex * 2 + branchIndex) % 10;
+        return TIANGAN[stemIndex] + DIZHI[branchIndex];
+      }
+      function getSexagenaryPillars(date){
+        const beijingDate = toBeijingDate(date);
+        const year = getYearPillar(beijingDate);
+        const month = getMonthPillar(beijingDate, year.stemIndex);
+        const day = getDayPillar(beijingDate);
+        const hour = getHourPillar(beijingDate, day.stemIndex);
+        return { year: year.pillar, month, day: day.pillar, hour };
+      }
+      function formatDateTime(date){
+        const beijingDate = toBeijingDate(date);
+        return `${beijingDate.getUTCFullYear()}-${pad(beijingDate.getUTCMonth()+1)}-${pad(beijingDate.getUTCDate())} ${pad(beijingDate.getUTCHours())}:${pad(beijingDate.getUTCMinutes())}:${pad(beijingDate.getUTCSeconds())}`;
+      }
+      function renderDateTimeAndPillars(date){
+        document.getElementById('current-datetime').innerHTML = `当前北京时间：<strong>${formatDateTime(date)}</strong>`;
+        const p = getSexagenaryPillars(date);
+        document.getElementById('current-pillars').innerHTML = `四柱：<strong>${p.year}年 ${p.month}月 ${p.day}日 ${p.hour}时</strong>`;
+      }
+      async function fetchAndRenderCurrentTime(){
+        try {
+          const res = await fetch(DATETIME_API);
+          const data = await res.json();
+          const date = new Date(data.datetime);
+          if(isNaN(date)) throw new Error('无效时间');
+          renderDateTimeAndPillars(date);
+        } catch (e) {
+          renderDateTimeAndPillars(new Date());
+        }
+      }
 
       ;(function(){
         const randomBtn = document.getElementById('randomize');
         const branchSelect = document.getElementById('branch-select');
+        const refreshBtn = document.getElementById('refresh-time');
         const selectedBranchLabel = document.getElementById('selected-branch');
         const grid = document.getElementById('result-grid');
+        const historyListEl = document.getElementById('history-list');
+        const HISTORY_KEY = 'xiaoqimen_chart_history';
+        const MAX_HISTORY = 20;
+        let history = [];
+
+        function saveHistory(){
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        }
+        function renderHistory(){
+          historyListEl.innerHTML = '';
+          if(history.length === 0){
+            historyListEl.textContent = '暂无排盘记录';
+            return;
+          }
+          history.forEach((item,index)=>{
+            const row = document.createElement('div');
+            row.style.display = 'flex';
+            row.style.gap = '8px';
+            row.style.alignItems = 'center';
+
+            const btn = document.createElement('button');
+            btn.className = 'btn-ghost';
+            btn.style.flex = '1';
+            btn.style.textAlign = 'left';
+            btn.textContent = `${item.datetime} · ${item.branch}`;
+            btn.dataset.historyIndex = index;
+            row.appendChild(btn);
+
+            const restoreBtn = document.createElement('button');
+            restoreBtn.textContent = '复原';
+            restoreBtn.dataset.historyIndex = index;
+            row.appendChild(restoreBtn);
+            historyListEl.appendChild(row);
+          });
+        }
+        function addHistory(branch){
+          const now = new Date();
+          const item = { branch, datetime: formatDateTime(now) };
+          history = [item, ...history].slice(0, MAX_HISTORY);
+          saveHistory();
+          renderHistory();
+        }
+        function restoreHistory(index){
+          const item = history[index];
+          if(!item) return;
+          branchSelect.value = item.branch;
+          selectedBranchLabel.innerHTML = `当前地支：<strong>${item.branch}</strong>`;
+          renderGrid(item.branch);
+        }
+        historyListEl.addEventListener('click', (event)=>{
+          const idx = event.target.dataset.historyIndex;
+          if(typeof idx !== 'undefined'){
+            restoreHistory(Number(idx));
+          }
+        });
+
+        const storedHistory = localStorage.getItem(HISTORY_KEY);
+        if(storedHistory){
+          try { history = JSON.parse(storedHistory) || []; } catch(e){ history = []; }
+        }
+        renderHistory();
 
         DIZHI.forEach((branch)=>{
           const option = document.createElement('option');
@@ -173,17 +345,22 @@
           if(branch) {
             selectedBranchLabel.innerHTML = `当前地支：<strong>${branch}</strong>`;
             renderGrid(branch);
+            addHistory(branch);
           }
         });
+
+        refreshBtn.addEventListener('click', fetchAndRenderCurrentTime);
 
         function randomizeBranch(){
           const branch = DIZHI[Math.floor(Math.random() * DIZHI.length)];
           branchSelect.value = branch;
           selectedBranchLabel.innerHTML = `当前地支：<strong>${branch}</strong>`;
           renderGrid(branch);
+          addHistory(branch);
         }
 
         randomBtn.addEventListener('click',randomizeBranch);
+        fetchAndRenderCurrentTime();
       })();
     </script>
   </body>
