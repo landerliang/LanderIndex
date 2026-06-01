@@ -33,11 +33,14 @@
     <div id="app">
       <div class="container">
         <div class="card">
-          <h1>飞宫小奇门排盘</h1>
+          <h1>☯飞宫小奇门排盘</h1>
         </div>
 
         <div class="card">
           <div class="small">随机地支排盘</div>
+		    <div class="small" id="current-datetime">当前：<strong>加载中...</strong></div>
+            <div class="small" id="current-pillars">四柱：<strong>加载中...</strong></div>
+            <button id="refresh-time" class="btn-ghost">刷新日期时间</button>
           <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
             <button id="randomize">随机生成地支</button>
             <label class="small">手动选择地支：
@@ -47,14 +50,6 @@
           </div>
         </div>
 
-        <div class="card">
-          <div class="small">当前日期时间与四柱</div>
-          <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-            <div class="small" id="current-datetime">当前时间：<strong>加载中...</strong></div>
-            <div class="small" id="current-pillars">四柱：<strong>加载中...</strong></div>
-            <button id="refresh-time" class="btn-ghost">刷新日期时间</button>
-          </div>
-        </div>
 
 
 
@@ -174,7 +169,7 @@
         return `${beijingDate.getUTCFullYear()}-${pad(beijingDate.getUTCMonth()+1)}-${pad(beijingDate.getUTCDate())} ${pad(beijingDate.getUTCHours())}:${pad(beijingDate.getUTCMinutes())}:${pad(beijingDate.getUTCSeconds())}`;
       }
       function renderDateTimeAndPillars(date){
-        document.getElementById('current-datetime').innerHTML = `当前北京时间：<strong>${formatDateTime(date)}</strong>`;
+        document.getElementById('current-datetime').innerHTML = `时间：<strong>${formatDateTime(date)}</strong>`;
         const p = getSexagenaryPillars(date);
         document.getElementById('current-pillars').innerHTML = `四柱：<strong>${p.year}年 ${p.month}月 ${p.day}日 ${p.hour}时</strong>`;
       }
