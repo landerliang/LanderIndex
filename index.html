@@ -59,9 +59,18 @@
         </div>
 
                 <div class="card">
-          <div class="small">排盘记录</div>
-          <div id="history-list" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;min-height:60px;color:#5a4617;"></div>
-        </div>
+                  <div class="small">排盘记录</div>
+                  <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                    <input id="history-search" placeholder="搜索占断标题" style="padding:6px;border-radius:6px;border:1px solid rgba(216,184,63,0.2);min-width:160px">
+                    <button id="clear-history" class="btn-ghost">一键清空</button>
+                    <div id="history-pager" style="margin-left:auto;display:flex;gap:8px;align-items:center">
+                      <button id="pager-prev" class="btn-ghost">上一页</button>
+                      <div id="pager-info" class="small">1/1</div>
+                      <button id="pager-next" class="btn-ghost">下一页</button>
+                    </div>
+                  </div>
+                  <div id="history-list" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;min-height:60px;color:#5a4617;"></div>
+                </div>
       </div>
     </div>
 
@@ -194,44 +203,94 @@
         const historyListEl = document.getElementById('history-list');
         const HISTORY_KEY = 'xiaoqimen_chart_history';
         const MAX_HISTORY = 20;
+        const PAGE_SIZE = 5;
         let history = [];
+        let currentPage = 1;
+        let searchQuery = '';
 
         function saveHistory(){
           localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
         }
+        function truncateText(s, len){ return s && s.length > len ? s.slice(0,len-1) + '…' : s || ''; }
         function renderHistory(){
           historyListEl.innerHTML = '';
-          if(history.length === 0){
+          // prepare indexed, sorted (by datetime desc)
+          const indexed = history.map((it, i) => ({ it, i }));
+          indexed.sort((a,b) => b.it.datetime.localeCompare(a.it.datetime));
+          // apply search filter on title
+          const filtered = indexed.filter(x => {
+            if(!searchQuery) return true;
+            return (x.it.title || '').toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1;
+          });
+          if(filtered.length === 0){
             historyListEl.textContent = '暂无排盘记录';
+            document.getElementById('pager-info').textContent = '0/0';
             return;
           }
-          history.forEach((item,index)=>{
+          const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+          if(currentPage > totalPages) currentPage = totalPages;
+          const start = (currentPage - 1) * PAGE_SIZE;
+          const pageItems = filtered.slice(start, start + PAGE_SIZE);
+          pageItems.forEach(({it, i})=>{
             const row = document.createElement('div');
             row.style.display = 'flex';
             row.style.gap = '8px';
-            row.style.alignItems = 'center';
+            row.style.alignItems = 'flex-start';
+            row.style.padding = '6px 8px';
+            row.style.borderRadius = '6px';
+            row.style.background = 'rgba(245,240,220,0.6)';
 
-            const btn = document.createElement('button');
-            btn.className = 'btn-ghost';
-            btn.style.flex = '1';
-            btn.style.textAlign = 'left';
-            btn.textContent = `${item.datetime} · ${item.branch}`;
-            btn.dataset.historyIndex = index;
-            row.appendChild(btn);
+            const content = document.createElement('div');
+            content.style.flex = '1';
+            content.style.overflow = 'hidden';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.style.fontWeight = '700';
+            titleDiv.style.whiteSpace = 'nowrap';
+            titleDiv.style.overflow = 'hidden';
+            titleDiv.style.textOverflow = 'ellipsis';
+            titleDiv.textContent = truncateText(it.title || '', 30) || '(无标题)';
+            titleDiv.dataset.historyIndex = i;
+            titleDiv.dataset.action = 'open';
+
+            const subDiv = document.createElement('div');
+            subDiv.style.fontSize = '12px';
+            subDiv.style.color = '#5a4617';
+            subDiv.style.whiteSpace = 'nowrap';
+            subDiv.style.overflow = 'hidden';
+            subDiv.style.textOverflow = 'ellipsis';
+            subDiv.textContent = `${it.datetime} · ${it.branch}`;
+            subDiv.dataset.historyIndex = i;
+            subDiv.dataset.action = 'open';
+
+            content.appendChild(titleDiv);
+            content.appendChild(subDiv);
 
             const restoreBtn = document.createElement('button');
             restoreBtn.textContent = '复原';
-            restoreBtn.dataset.historyIndex = index;
+            restoreBtn.dataset.historyIndex = i;
+            restoreBtn.dataset.action = 'restore';
+
+            const delBtn = document.createElement('button');
+            delBtn.textContent = '删除';
+            delBtn.style.background = '#fff';
+            delBtn.dataset.historyIndex = i;
+            delBtn.dataset.action = 'delete';
+
+            row.appendChild(content);
             row.appendChild(restoreBtn);
+            row.appendChild(delBtn);
             historyListEl.appendChild(row);
           });
+          document.getElementById('pager-info').textContent = `${currentPage}/${totalPages}`;
         }
         function addHistory(branch){
           const now = new Date();
-          const item = { branch, datetime: formatDateTime(now) };
+          const item = { branch, datetime: formatDateTime(now), title: '', note: '' };
           history = [item, ...history].slice(0, MAX_HISTORY);
           saveHistory();
           renderHistory();
+          currentHistoryIndex = 0;
         }
         function restoreHistory(index){
           const item = history[index];
@@ -239,11 +298,23 @@
           branchSelect.value = item.branch;
           selectedBranchLabel.innerHTML = `当前地支：<strong>${item.branch}</strong>`;
           renderGrid(item.branch);
+          // show saved judgement if any
+          document.getElementById('judgement-title').value = item.title || '';
+          document.getElementById('judgement-note').value = item.note || '';
+          currentHistoryIndex = index;
         }
         historyListEl.addEventListener('click', (event)=>{
           const idx = event.target.dataset.historyIndex;
+          const action = event.target.dataset.action || 'open';
           if(typeof idx !== 'undefined'){
-            restoreHistory(Number(idx));
+            const i = Number(idx);
+            if(action === 'restore' || action === 'open') return restoreHistory(i);
+            if(action === 'delete'){
+              if(!confirm('确定删除该条记录？')) return;
+              history.splice(i,1);
+              saveHistory();
+              renderHistory();
+            }
           }
         });
 
@@ -251,6 +322,7 @@
         if(storedHistory){
           try { history = JSON.parse(storedHistory) || []; } catch(e){ history = []; }
         }
+        let currentHistoryIndex = null;
         renderHistory();
 
         DIZHI.forEach((branch)=>{
@@ -259,6 +331,63 @@
           option.textContent = branch;
           branchSelect.appendChild(option);
         });
+
+        // judgement inputs under result panel (create elements dynamically)
+        const resultCard = document.querySelector('.grid').parentElement;
+        const judgementDiv = document.createElement('div');
+        judgementDiv.style.marginTop = '12px';
+        judgementDiv.innerHTML = `
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label class="small">占断标题<input id="judgement-title" maxlength="30" placeholder="占断标题（最多30字）" style="width:100%;padding:6px;border-radius:6px;border:1px solid rgba(216,184,63,0.2)"></label>
+            <label class="small">断语<textarea id="judgement-note" maxlength="500" placeholder="断语（最多500字）" rows="4" style="width:100%;padding:6px;border-radius:6px;border:1px solid rgba(216,184,63,0.2)"></textarea></label>
+            <div style="display:flex;gap:8px;">
+              <button id="save-judgement">保存占断</button>
+              <button id="clear-judgement" class="btn-ghost">清空</button>
+            </div>
+          </div>`;
+        resultCard.appendChild(judgementDiv);
+
+        document.getElementById('save-judgement').addEventListener('click', ()=>{
+          const title = document.getElementById('judgement-title').value.trim();
+          const note = document.getElementById('judgement-note').value.trim();
+          if(title.length > 30) return alert('标题最多30字');
+          if(note.length > 500) return alert('断语最多500字');
+          if(currentHistoryIndex === null){
+            // if no history entry, auto add current branch then attach
+            if(!branchSelect.value) return alert('请先选择或生成一个排盘再保存占断');
+            addHistory(branchSelect.value);
+          }
+          history[currentHistoryIndex].title = title;
+          history[currentHistoryIndex].note = note;
+          saveHistory();
+          renderHistory();
+          alert('占断已保存到当前排盘记录');
+        });
+        document.getElementById('clear-judgement').addEventListener('click', ()=>{
+          document.getElementById('judgement-title').value = '';
+          document.getElementById('judgement-note').value = '';
+        });
+
+        // clear all history
+        const clearBtn = document.getElementById('clear-history');
+        clearBtn.addEventListener('click', ()=>{
+          if(!confirm('确定清空所有排盘记录吗？')) return;
+          history = [];
+          saveHistory();
+          renderHistory();
+        });
+
+        // search and pager handlers
+        const searchInput = document.getElementById('history-search');
+        const prevBtn = document.getElementById('pager-prev');
+        const nextBtn = document.getElementById('pager-next');
+        searchInput.addEventListener('input', ()=>{
+          searchQuery = searchInput.value.trim();
+          currentPage = 1;
+          renderHistory();
+        });
+        prevBtn.addEventListener('click', ()=>{ if(currentPage>1){ currentPage--; renderHistory(); } });
+        nextBtn.addEventListener('click', ()=>{ currentPage++; renderHistory(); });
 
         function renderGrid(branch){
           grid.innerHTML = '';
