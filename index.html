@@ -156,7 +156,7 @@
         const current = Date.UTC(beijing.getUTCFullYear(), beijing.getUTCMonth(), beijing.getUTCDate());
         const ref = Date.UTC(1984, 1, 2); // 1984-02-02 北京时间基准日
         const days = Math.floor((current - ref) / 86400000);
-        const index = cycleIndex(days + 1, 0, 60);
+        const index = cycleIndex(days + 2, 0, 60);
         return { pillar: TIANGAN[index % 10] + DIZHI[index % 12], stemIndex: index % 10 };
       }
       function getHourPillar(date, dayStemIndex){
@@ -469,7 +469,7 @@
           if(branch) {
             selectedBranchLabel.innerHTML = `当前地支：<strong>${branch}</strong>`;
             renderGrid(branch);
-            addHistory(branch);
+            currentHistoryIndex = null;
           }
         });
 
@@ -480,7 +480,7 @@
           branchSelect.value = branch;
           selectedBranchLabel.innerHTML = `当前地支：<strong>${branch}</strong>`;
           renderGrid(branch);
-          addHistory(branch);
+          currentHistoryIndex = null;
         }
 
         randomBtn.addEventListener('click',randomizeBranch);
